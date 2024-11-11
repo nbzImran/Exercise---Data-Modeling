@@ -1,0 +1,83 @@
+
+Player ----< Team ----< Match >---- Team
+          |          |          |
+        Goal     MatchReferee     Season
+                                    |
+                               Standings
+
+
+
+CREATE TABLE Team (
+    team_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(100),
+    coach_name VARCHAR(50)
+);
+
+
+CREATE TABLE Player (
+    palyer_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    position VARCHAR(50),
+    team_id INT,
+    FOREIGN KEY (team_id) REFERENCES Team(team_id)
+);
+
+CREATE TABLE Season (
+    season_id INT PRIMARY KEY,
+    start_date DATE,
+    end_date DATE,
+);
+
+
+
+CREATE TABLE Match (
+    match_id INT PRIMARY KEY,
+    home_team_id INT,
+    away_team_id INT,
+    date DATE,
+    season_id INT,
+    FOREIGN KEY (home_team_id) REFERENCES Team(team_id),
+    FOREIGN KEY (away_team_id) REFERENCES Team(team_id),
+    FOREIGN KEY (season_id) REFERENCES Season(season_id)
+);
+
+
+CREATE TABLE Goal (
+    goal_id INT PRIMARY KEY,
+    match_id INT,
+    palyer_id INT,
+    time_scored TIME,
+    FOREIGN KEY (match_id) REFERENCES Match(match_id),
+    FOREIGN KEY (palyer_id) REFERENCES Player(palyer_id),
+);
+
+
+CREATE TABLE Referee (
+    referee_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    experience_level VARCHAR(50),
+);
+
+
+CREATE TABLE MatchReferee (
+    match_id INT,
+    referee_id INT,
+    PRIMARY KEY (match_id, referee_id),
+    FOREIGN KEY (match_id) REFERENCES Match(match_id),
+    FOREIGN KEY (referee_id) REFERENCES Referee(referee_id),
+);
+
+
+
+CREATE TABLE Standings (
+    season_id INT,
+    team_id INT,
+    wins INT DEFAULT 0,
+    losses INT DEFAULT 0,
+    draws INT DEFAULT 0,
+    points INT DEFAULT 0,
+    PRIMARY KEY (season_id, team_id),
+    FOREIGN KEY (season_id) REFERENCES Season(season_id),
+    /FOREIGN KEY (team_id) REFERENCES Team(team_id),
+);

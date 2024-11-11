@@ -1,0 +1,58 @@
+
+
+User ----< Post >---- Region
+                |
+          PostCategory
+                |
+           Category
+User ----< Post >---- Region
+                |
+          PostCategory
+                |
+           Category
+
+
+
+
+CREATE TABLE Region (
+    region_id INT PRIMARY KEY,
+    name VARCHAR(100) UNIQUE,
+);
+
+
+
+CREATE TABLE User (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    phone_number VARCHAR(15),
+    preferred_region_id INT,
+    FOREIGN KEY (preferred_region_id) REFERENCES Region(region_id)
+);
+
+
+CREATE TABLE Post (
+    post_id INT PRIMARY KEY,
+    user_id INT,
+    region_id INT,
+    title VARCHAR(100),
+    text TEXT,
+    location VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (region_id) REFERENCES Region(region_id)
+);
+
+
+CREATE TABLE Category (
+    category_id INT PRIMARY KEY,
+    name VARCHAR(100) UNIQUE,
+);
+
+CREATE TABLE postCategory (
+    post_id INT,
+    category_id INT,
+    PRIMARY KEY (post_id, category_id),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id),
+    FOREIGN KEY (category_id) REFERENCES Category(category_id)
+);
